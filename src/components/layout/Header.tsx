@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '../../lib/store';
-import { Menu, X, Code, Sun, Moon, Search, Bell, User } from 'lucide-react';
+import { Menu, X, Code, Sun, Moon, Search, Bell, User, LogOut } from 'lucide-react';
 import Button from '../ui/Button';
 import Avatar from '../ui/Avatar';
 
@@ -10,8 +10,14 @@ const Header: React.FC = () => {
     sidebarOpen,
     theme,
     toggleTheme,
-    currentUser
+    currentUser,
+    logout
   } = useStore();
+
+  const handleLogout = async () => {
+    await logout();
+    // The logout function in the store will reset authentication state
+  };
 
   return (
     <header className="sticky top-0 z-10 flex h-14 items-center border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-700 dark:bg-slate-900/90">
@@ -59,17 +65,28 @@ const Header: React.FC = () => {
             aria-label="Notifications"
           />
           
-          <div className="relative ml-2">
+          <div className="relative ml-2 flex items-center">
             {currentUser && (
               <div className="flex items-center gap-2">
                 <span className="hidden text-sm font-medium md:inline-block">
-                  {currentUser.username}
+                  {currentUser.name}
                 </span>
                 <Avatar 
-                  src={currentUser.avatarUrl} 
-                  alt={currentUser.username}
+                  src={currentUser.avatar} 
+                  alt={currentUser.name}
                   size="sm"
                 />
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="ml-2 text-red-500"
+                  icon={<LogOut size={16} />}
+                  aria-label="Log out"
+                >
+                  <span className="hidden md:inline-block">Logout</span>
+                </Button>
               </div>
             )}
           </div>

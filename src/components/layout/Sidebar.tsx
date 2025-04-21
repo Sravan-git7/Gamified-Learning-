@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '../../lib/store';
-import { Home, Award, Users, Settings, BookOpen, Code, BarChart, Zap, Video } from 'lucide-react';
+import { Home, Award, Users, Settings, BookOpen, Code, BarChart, Video } from 'lucide-react';
 import Button from '../ui/Button';
 
 interface SidebarItemProps {
@@ -8,6 +8,18 @@ interface SidebarItemProps {
   label: string;
   active: boolean;
   onClick: () => void;
+}
+
+interface SidebarProps {
+  onViewChange?: (view: 'dashboard' | 'challenges' | 'leaderboard') => void;
+}
+
+// User stats structure for typed access
+interface UserStats {
+  rank?: string | number;
+  points?: number;
+  solvedChallenges?: number;
+  streak?: number;
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ icon, label, active, onClick }) => {
@@ -26,18 +38,33 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ icon, label, active, onClick 
   );
 };
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<SidebarProps> = ({ onViewChange }) => {
   const { sidebarOpen, currentUser } = useStore();
   const [activeTab, setActiveTab] = React.useState('challenges');
 
+  // Handle tab click with optional view change notification
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
+    
+    // If onViewChange is provided and the tab is a valid view, call it
+    if (onViewChange && (tab === 'dashboard' || tab === 'challenges' || tab === 'leaderboard')) {
+      onViewChange(tab as 'dashboard' | 'challenges' | 'leaderboard');
+    }
   };
 
   if (!sidebarOpen) return null;
 
+  // Mock user stats for demonstration purposes
+  // In a real app, these would come from the user's profile in the database
+  const userStats = {
+    rank: currentUser ? '42' : 'N/A',
+    points: 1250,
+    solvedChallenges: 15,
+    streak: 7
+  };
+
   return (
-    <aside className="fixed inset-y-0 left-0 z-20 flex flex-col w-64 h-full bg-white border-r border-slate-200 pt-14 dark:border-slate-700 dark:bg-slate-900 md:pt-14">
+    <aside className="fixed inset-y-0 left-0 z-20 flex h-full w-64 flex-col border-r border-slate-200 bg-white pt-14 dark:border-slate-700 dark:bg-slate-900 md:pt-14">
       <div className="flex flex-col gap-1 px-3 py-4">
         <SidebarItem 
           icon={<Home size={18} />} 
@@ -83,31 +110,26 @@ const Sidebar: React.FC = () => {
         />
       </div>
 
-      <div className="px-3 py-3 border-t border-slate-200 dark:border-slate-700">
-        <h3 className="px-3 mb-2 text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Stats</h3>
+      <div className="border-t border-slate-200 px-3 py-3 dark:border-slate-700">
+        <h3 className="mb-2 px-3 text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Stats</h3>
         <div className="grid grid-cols-2 gap-2 px-3 py-1 text-sm">
           <div>Rank:</div>
-          <div className="font-medium text-right">{currentUser?.rank ?? 'N/A'}</div>
-
+          <div className="font-medium text-right">{userStats.rank}</div>
           <div>Points:</div>
-          <div className="font-medium text-right">
-            {typeof currentUser?.points === 'number' ? currentUser.points.toLocaleString() : '0'}
-          </div>
-
+          <div className="font-medium text-right">{userStats.points.toLocaleString()}</div>
           <div>Solved:</div>
-          <div className="font-medium text-right">{currentUser?.solvedChallenges ?? 0}</div>
-
+          <div className="font-medium text-right">{userStats.solvedChallenges}</div>
           <div>Streak:</div>
-          <div className="font-medium text-right">{currentUser?.streak ? `${currentUser.streak} days` : '0 days'}</div>
+          <div className="font-medium text-right">{userStats.streak} days</div>
         </div>
       </div>
 
-      <div className="px-3 py-4 mt-auto border-t border-slate-200 dark:border-slate-700">
+      <div className="mt-auto px-3 py-4 border-t border-slate-200 dark:border-slate-700">
         <Button 
           variant="outline" 
-          className="justify-start w-full"
-          icon={<Settings size={16} />}
+          className="w-full justify-start"
         >
+          <Settings size={16} className="mr-2" />
           Settings
         </Button>
       </div>
