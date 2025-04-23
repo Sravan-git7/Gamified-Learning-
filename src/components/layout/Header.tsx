@@ -11,12 +11,23 @@ const Header: React.FC = () => {
     theme,
     toggleTheme,
     currentUser,
-    logout
+    logout,
+    setCurrentView
   } = useStore();
 
   const handleLogout = async () => {
     await logout();
     // The logout function in the store will reset authentication state
+  };
+  
+  const handleToggleSidebar = () => {
+    console.log("Toggling sidebar, current state:", sidebarOpen);
+    toggleSidebar();
+  };
+  
+  const goToDashboard = () => {
+    console.log("Navigating to dashboard");
+    setCurrentView('dashboard');
   };
 
   return (
@@ -26,12 +37,14 @@ const Header: React.FC = () => {
           <Button 
             variant="ghost" 
             size="sm"
-            className="md:hidden"
-            onClick={toggleSidebar}
+            onClick={handleToggleSidebar}
             icon={sidebarOpen ? <X size={18} /> : <Menu size={18} />}
             aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
           />
-          <div className="flex items-center gap-2">
+          <div 
+            className="flex items-center gap-2 cursor-pointer" 
+            onClick={goToDashboard}
+          >
             <Code className="h-6 w-6 text-primary-600" />
             <span className="hidden font-semibold text-lg md:inline-block">CodeCraft</span>
           </div>

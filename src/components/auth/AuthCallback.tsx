@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { useStore } from '../../lib/store';
+import { useNavigate } from 'react-router-dom';
 
 const AuthCallback = () => {
-  const { setAuthenticated, setUser } = useStore();
+  const { setAuthenticated, setUser, setCurrentView } = useStore();
   const [message, setMessage] = useState<string>('Processing authentication...');
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Handle the OAuth callback
@@ -29,15 +31,18 @@ const AuthCallback = () => {
             avatar: user.user_metadata.avatar_url || '',
           });
           
-          // Set authenticated state
+          // Set authenticated state and current view
           setAuthenticated(true);
+          setCurrentView('dashboard');
           
           // Successful authentication message
           setMessage('Authentication successful! Redirecting...');
           
-          // Redirect to the dashboard or home page after a short delay
+          // Redirect to the dashboard using router navigate
+          // Timeout to show the success message briefly
           setTimeout(() => {
-            window.location.href = '/';
+            // Navigate to homepage but the dashboard will be shown since we set currentView
+            navigate('/', { replace: true });
           }, 1500);
         } else {
           setMessage('No active session found. Please try logging in again.');
@@ -49,7 +54,7 @@ const AuthCallback = () => {
     };
 
     handleAuthCallback();
-  }, [setAuthenticated, setUser]);
+  }, [setAuthenticated, setUser, setCurrentView, navigate]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-900">

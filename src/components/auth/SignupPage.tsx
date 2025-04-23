@@ -8,7 +8,7 @@ interface SignupPageProps {
 }
 
 const SignupPage: React.FC<SignupPageProps> = ({ onClose }) => {
-  const { setAuthenticated, setUser } = useStore();
+  const { setAuthenticated, setUser, setCurrentView } = useStore();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,6 +39,7 @@ const SignupPage: React.FC<SignupPageProps> = ({ onClose }) => {
           avatar: '',
         });
         setAuthenticated(true);
+        setCurrentView('dashboard');
         alert('Sign up successful! Welcome to the platform.');
       } else {
         alert('Check your email to confirm your signup!');

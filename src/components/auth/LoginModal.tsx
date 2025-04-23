@@ -4,7 +4,7 @@ import { supabase } from '../../lib/supabaseClient';
 import { useStore } from '../../lib/store';
 
 function LoginModal({ onClose }: { onClose: () => void }) {
-  const { setAuthenticated, setUser } = useStore();
+  const { setAuthenticated, setUser, setCurrentView } = useStore();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,6 +26,7 @@ function LoginModal({ onClose }: { onClose: () => void }) {
           avatar: data.user.user_metadata.avatar_url || '',
         });
         setAuthenticated(true);
+        setCurrentView('dashboard');
         alert('Login successful! Welcome back.');
       }
     } catch (err) {
