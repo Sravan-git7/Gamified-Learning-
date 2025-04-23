@@ -46,7 +46,8 @@ const Header: React.FC = () => {
             onClick={goToDashboard}
           >
             <Code className="h-6 w-6 text-primary-600" />
-            <span className="hidden font-semibold text-lg md:inline-block">CodeCraft</span>
+            <span className="hidden font-semibold text-lg md:inline-block">Gradivo
+            </span>
           </div>
         </div>
 
