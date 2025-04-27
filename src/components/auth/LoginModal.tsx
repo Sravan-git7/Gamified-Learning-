@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { useStore } from '../../lib/store';
 
-function LoginModal({ onClose }: { onClose: () => void }) {
+function LoginModal({ onClose, onSwitchToSignup }: { onClose: () => void; onSwitchToSignup: () => void }) {
   const { setAuthenticated, setUser, setCurrentView } = useStore();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -126,6 +126,15 @@ function LoginModal({ onClose }: { onClose: () => void }) {
               </svg>
               <span className="text-sm">Log in with GitHub</span>
             </button>
+          </div>
+
+          <div className="mt-4 text-center">
+            <p className="text-sm text-gray-500">
+              Don't have an account?{' '}
+              <button onClick={onSwitchToSignup} className="text-blue-600 hover:underline">
+                Sign Up
+              </button>
+            </p>
           </div>
 
           <button onClick={onClose} className="mt-4 w-full text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
