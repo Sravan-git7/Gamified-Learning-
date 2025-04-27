@@ -31,8 +31,8 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-10 flex h-14 items-center border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-700 dark:bg-slate-900/90">
-      <div className="flex items-center h-full px-4 w-full">
+    <header className="sticky top-0 z-10 flex items-center border-b h-14 border-slate-200 bg-white/90 backdrop-blur dark:border-slate-700 dark:bg-slate-900/90">
+      <div className="flex items-center w-full h-full px-4">
         <div className="flex items-center gap-2">
           <Button 
             variant="ghost" 
@@ -45,15 +45,15 @@ const Header: React.FC = () => {
             className="flex items-center gap-2 cursor-pointer" 
             onClick={goToDashboard}
           >
-            <Code className="h-6 w-6 text-primary-600" />
-            <span className="hidden font-semibold text-lg md:inline-block">Gradivo</span>
+            <Code className="w-6 h-6 text-primary-600" />
+            <span className="hidden text-lg font-semibold md:inline-block">Gradivo</span>
           </div>
         </div>
 
-        <div className="mx-4 flex-1 md:mx-8">
+        <div className="flex-1 mx-4 md:mx-8">
           <div className="relative max-w-md">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <Search className="h-4 w-4 text-slate-400" />
+              <Search className="w-4 h-4 text-slate-400" />
             </div>
             <input 
               type="search" 
@@ -78,7 +78,7 @@ const Header: React.FC = () => {
             aria-label="Notifications"
           />
           
-          <div className="relative ml-2 flex items-center">
+          <div className="relative flex items-center ml-2">
             {currentUser && (
               <div className="flex items-center gap-2">
                 <span className="hidden text-sm font-medium md:inline-block">
