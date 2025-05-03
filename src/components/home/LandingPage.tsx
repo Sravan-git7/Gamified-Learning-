@@ -157,7 +157,7 @@ const LandingPage: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
               <Code className="h-6 w-6 text-white" />
-              <span className="text-lg font-medium">CodeCraft</span>
+              <span className="text-lg font-medium">Gradivo</span>
             </div>
             <div className="hidden md:flex items-center gap-6">
               <button className="text-sm text-slate-300 hover:text-orange-500 transition-colors">
@@ -194,7 +194,7 @@ const LandingPage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
             <div className="max-w-4xl mx-auto text-center mb-20">
               <h1 className="text-5xl sm:text-6xl md:text-7xl font-medium tracking-tight">
-                CodeCraft is a purpose-built tool for
+                Gradivo is a purpose-built tool for
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400">
                   {' '}mastering algorithms
                 </span>
@@ -216,7 +216,7 @@ const LandingPage: React.FC = () => {
                   className="text-slate-300 hover:text-white"
                   onClick={handleGetStarted}
                 >
-                  Introducing CodeCraft for Teams →
+                  Introducing Gradivo for Teams →
                 </Button>
               </div>
             </div>

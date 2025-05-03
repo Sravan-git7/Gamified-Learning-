@@ -132,7 +132,7 @@ const Lectures: React.FC<LecturesProps> = ({
 
   return (
     <div className="container px-4 py-8 mx-auto text-black bg-slate-50 dark:bg-slate-900 dark:text-white">
-      <h1 className="mb-8 text-3xl font-bold text-center">CodeCraft Lectures</h1>
+      <h1 className="mb-8 text-3xl font-bold text-center">Gradivo Lectures</h1>
 
       {selectedLecture ? (
         <div className="mb-8 animate-fade-in">
