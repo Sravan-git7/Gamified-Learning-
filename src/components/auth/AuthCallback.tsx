@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const AuthCallback = () => {
   const { setAuthenticated, setUser, setCurrentView } = useStore();
-  const [message, setMessage] = useState<string>('Processing authentication...');
+  const [message, setMessage] = useState<string>('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,8 +35,7 @@ const AuthCallback = () => {
           setAuthenticated(true);
           setCurrentView('dashboard');
           
-          // Successful authentication message
-          setMessage('Authentication successful! Redirecting...');
+          
           
           // Redirect to the dashboard using router navigate
           // Timeout to show the success message briefly

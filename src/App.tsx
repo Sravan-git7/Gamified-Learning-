@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useStore } from './lib/store'
 import { supabase } from './lib/supabaseClient'
 
+import SplashScreen from './components/ui/SplashScreen'
 import Header from './components/layout/Header'
 import Sidebar from './components/layout/Sidebar'
 import ChallengeList from './components/features/ChallengeList'
@@ -26,17 +27,16 @@ function App() {
   } = useStore()
 
   const [loading, setLoading] = useState(true)
-  // Track whether we're showing the landing page initially
   const [initialLoad, setInitialLoad] = useState(true)
+  const [showSplash, setShowSplash] = useState(() => {
+    const alreadyShown = sessionStorage.getItem("splashShown")
+    return !alreadyShown
+  })
 
-  // Reset any potentially corrupted state on initial load
   useEffect(() => {
     const clearAppState = () => {
-      // Only for development - uncomment to clear persisted state
-      // localStorage.removeItem('gamified-learning-storage')
       console.log('Initial app state:', { isAuthenticated, currentView, currentUser })
     }
-    
     clearAppState()
   }, [])
 
@@ -52,8 +52,6 @@ function App() {
         }
 
         if (data.session) {
-          // We have a valid session
-          console.log('Found valid session, logging in user')
           const user = data.session.user
           setUser({
             id: user.id,
@@ -62,14 +60,10 @@ function App() {
             avatar: user.user_metadata.avatar_url || '',
           })
           setAuthenticated(true)
-          
-          // If user is authenticated but on home view, set to dashboard
           if (currentView === 'home') {
             setCurrentView('dashboard')
           }
         } else {
-          // No active session - show landing page
-          console.log('No active session found, showing login page')
           setAuthenticated(false)
           setUser(null)
           setCurrentView('home')
@@ -84,31 +78,27 @@ function App() {
 
     checkSession()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log('Auth state changed:', event)
-        
-        if (session) {
-          const user = session.user
-          setUser({
-            id: user.id,
-            email: user.email || '',
-            name: user.user_metadata.full_name || 'User',
-            avatar: user.user_metadata.avatar_url || '',
-          })
-          setAuthenticated(true)
-          
-          // If user just authenticated and still on home view, set to dashboard
-          if (currentView === 'home') {
-            setCurrentView('dashboard')
-          }
-        } else {
-          setUser(null)
-          setAuthenticated(false)
-          setCurrentView('home')
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event)
+
+      if (session) {
+        const user = session.user
+        setUser({
+          id: user.id,
+          email: user.email || '',
+          name: user.user_metadata.full_name || 'User',
+          avatar: user.user_metadata.avatar_url || '',
+        })
+        setAuthenticated(true)
+        if (currentView === 'home') {
+          setCurrentView('dashboard')
         }
+      } else {
+        setUser(null)
+        setAuthenticated(false)
+        setCurrentView('home')
       }
-    )
+    })
 
     return () => subscription.unsubscribe()
   }, [setUser, setAuthenticated, setCurrentView])
@@ -118,6 +108,16 @@ function App() {
       setCurrentView('challenges')
     }
   }, [currentChallenge, setCurrentView])
+
+  useEffect(() => {
+    if (showSplash) {
+      const timer = setTimeout(() => {
+        setShowSplash(false)
+        sessionStorage.setItem("splashShown", "true")
+      }, 1500) // change duration if needed
+      return () => clearTimeout(timer)
+    }
+  }, [showSplash])
 
   if (loading) {
     return (
@@ -130,26 +130,28 @@ function App() {
     )
   }
 
-  // On initial load or when not authenticated, always show landing page
   if (initialLoad || !isAuthenticated) {
     console.log('Rendering landing page')
-    return <LandingPage />
+    return (
+      <>
+        <LandingPage />
+        {showSplash && <SplashScreen />}
+      </>
+    )
   }
 
-  // If authenticated and view is home, show dashboard
   if (currentView === 'home' && isAuthenticated) {
     setCurrentView('dashboard')
   }
-  
+
   console.log('Rendering main app with view:', currentView)
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 relative">
       {sidebarOpen && <Sidebar />}
 
       <div className={`flex min-h-screen w-full flex-col ${sidebarOpen ? 'md:ml-64' : ''}`}>
         <Header />
-
         <main className="flex-1 p-4 sm:p-6 md:p-8">
           <div className="max-w-6xl mx-auto">
             {currentView === 'dashboard' && <Dashboard />}
@@ -170,6 +172,12 @@ function App() {
           </div>
         </main>
       </div>
+
+      {showSplash && (
+        <div className="absolute inset-0 z-50 bg-white dark:bg-black flex items-center justify-center">
+          <SplashScreen />
+        </div>
+      )}
     </div>
   )
 }
